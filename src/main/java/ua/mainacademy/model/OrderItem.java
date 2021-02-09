@@ -1,6 +1,7 @@
 package ua.mainacademy.model;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,15 +9,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Data
-@Builder(toBuilder = true)
+@SuperBuilder(toBuilder = true)
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "order_items")
 @Entity
 public class OrderItem extends BaseEntity {
-
-    private Integer id;
 
     @ManyToOne(targetEntity = Item.class)
     private Item item;
@@ -26,5 +25,4 @@ public class OrderItem extends BaseEntity {
 
     @Column(nullable = false)
     private Integer amount;
-
 }

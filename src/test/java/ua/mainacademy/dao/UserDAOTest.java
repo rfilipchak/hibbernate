@@ -28,6 +28,7 @@ class UserDAOTest {
         User user = aNewUser();
         UserDAO userDAO = new UserDAO();
         User savedUser = userDAO.save(user);
+
         assertNotNull(savedUser);
         assertNotNull(savedUser.getId());
     }
@@ -52,7 +53,7 @@ class UserDAOTest {
         User savedUser = userDAO.save(userForSaving);
         assertNotNull(savedUser.getId());
 
-        User roman = aNewUser().toBuilder()
+        User roman = savedUser.toBuilder()
                 .id(savedUser.getId())
                 .firstName("Roman")
                 .build();

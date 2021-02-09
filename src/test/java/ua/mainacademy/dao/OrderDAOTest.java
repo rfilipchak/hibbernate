@@ -15,7 +15,7 @@ import static ua.mainacademy.testsutil.ClearTestDB.clearDb;
 
 class OrderDAOTest {
 
-    private static User user = new User();
+    private User user;
 
     @BeforeEach
     void setUp() {

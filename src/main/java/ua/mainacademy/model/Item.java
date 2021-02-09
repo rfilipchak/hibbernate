@@ -1,21 +1,20 @@
 package ua.mainacademy.model;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Data
-@Builder(toBuilder = true)
+@SuperBuilder(toBuilder = true)
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "items")
 @Entity
 public class Item extends BaseEntity {
-
-    private Integer id ;
 
     @Column(name = "item_code", nullable = false)
     private String itemCode;
@@ -27,5 +26,4 @@ public class Item extends BaseEntity {
 
     @Column(name = "init_price")
     private Integer initPrice;
-
 }

@@ -1,21 +1,20 @@
 package ua.mainacademy.model;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Data
-@Builder(toBuilder = true)
 @ToString(callSuper = true)
+@SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
 @Entity
 public class User extends BaseEntity {
-
-    private Integer id;
 
     @Column(nullable = false)
     private String login;
