@@ -4,7 +4,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import ua.mainacademy.model.Item;
 import ua.mainacademy.model.Order;
 import ua.mainacademy.model.OrderItem;
@@ -61,8 +60,8 @@ class OrderItemDAOTest {
 
         assertNotNull(savedOrderItem.getId());
 
-        Assertions.assertTrue(new ReflectionEquals(savedOrderItem)
-                .matches(orderItemDAO.getById(savedOrderItem.getId())));
+        Assertions.assertEquals(savedOrderItem, orderItemDAO
+                .getById(savedOrderItem.getId()));
     }
 
     @Test
@@ -82,10 +81,7 @@ class OrderItemDAOTest {
                 .build();
         OrderItem updatedOrderItem = orderItemDAO.update(orderItemForUpdate);
 
-        Assertions.assertTrue(new ReflectionEquals(savedOrderItem, "amount")
-                .matches(updatedOrderItem));
-        Assertions.assertTrue(updatedOrderItem.getAmount()
-                .equals(orderItemForUpdate.getAmount()));
+        Assertions.assertEquals(orderItemForUpdate, updatedOrderItem);
     }
 
     @Test
