@@ -6,6 +6,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ua.mainacademy.model.Order;
 import ua.mainacademy.model.User;
+import ua.mainacademy.service.OrderService;
+import ua.mainacademy.service.UserService;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static ua.mainacademy.prototype.Prototype.aNewOrder;
@@ -14,6 +16,8 @@ import static ua.mainacademy.testsutil.ClearTestDB.clearDb;
 
 class OrderDAOTest {
 
+    private OrderService orderService = new OrderService(new OrderDAO());
+    private UserService userService = new UserService(new UserDAO());
     private User user;
 
     @BeforeEach
@@ -30,8 +34,7 @@ class OrderDAOTest {
     @Test
     void saveOrderTest() {
         Order order = aNewOrder().toBuilder().user(user).build();
-        OrderDAO orderDAO = new OrderDAO();
-        Order savedOrder = orderDAO.save(order);
+        Order savedOrder = orderService.save(order);
 
         assertNotNull(savedOrder);
         assertNotNull(savedOrder.getId());
@@ -40,27 +43,24 @@ class OrderDAOTest {
     @Test
     void getOrderByIdTest() {
         Order order = aNewOrder().toBuilder().user(user).build();
-        OrderDAO orderDAO = new OrderDAO();
-        Order savedOrder = orderDAO.save(order);
+        Order savedOrder = orderService.save(order);
 
         assertNotNull(savedOrder.getId());
-
-        Assertions.assertEquals(orderDAO.getById(savedOrder.getId()), savedOrder);
+        Assertions.assertEquals(orderService.getById(savedOrder.getId()), savedOrder);
     }
 
     @Test
     void updateOrderTest() {
         Order order = aNewOrder().toBuilder().user(user).build();
-        OrderDAO orderDAO = new OrderDAO();
+        Order savedOrder = orderService.save(order);
 
-        Order savedOrder = orderDAO.save(order);
         assertNotNull(savedOrder.getId());
 
         Order orderForUpdate = order.toBuilder()
                 .id(savedOrder.getId())
                 .status(Order.Status.CLOSED)
                 .build();
-        Order updatedOrder = orderDAO.update(orderForUpdate);
+        Order updatedOrder = orderService.update(orderForUpdate);
 
         Assertions.assertEquals(orderForUpdate, updatedOrder);
     }
@@ -68,23 +68,20 @@ class OrderDAOTest {
     @Test
     void deleteOrderTest() {
         Order order = aNewOrder().toBuilder().user(user).build();
-        OrderDAO orderDAO = new OrderDAO();
 
-        Order savedOrder = orderDAO.save(order);
+        Order savedOrder = orderService.save(order);
         assertNotNull(savedOrder.getId());
 
-        orderDAO.delete(savedOrder);
+        orderService.delete(savedOrder);
 
-        Assertions.assertNull(orderDAO.getById(savedOrder.getId()));
+        Assertions.assertNull(orderService.getById(savedOrder.getId()));
     }
 
     private User getCreatedUser() {
         User userForSaving = aNewUser();
-        UserDAO userDAO = new UserDAO();
+        User savedUser = userService.save(userForSaving);
 
-        User savedUser = userDAO.save(userForSaving);
         assertNotNull(savedUser.getId());
         return savedUser;
     }
-
 }

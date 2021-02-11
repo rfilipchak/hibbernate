@@ -5,12 +5,15 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ua.mainacademy.model.User;
+import ua.mainacademy.service.UserService;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static ua.mainacademy.prototype.Prototype.aNewUser;
 import static ua.mainacademy.testsutil.ClearTestDB.clearDb;
 
 class UserDAOTest {
+
+    private UserService userService = new UserService(new UserDAO());
 
     @BeforeEach
     void setUp() {
@@ -25,8 +28,7 @@ class UserDAOTest {
     @Test
     void saveUserTest() {
         User user = aNewUser();
-        UserDAO userDAO = new UserDAO();
-        User savedUser = userDAO.save(user);
+        User savedUser = userService.save(user);
 
         assertNotNull(savedUser);
         assertNotNull(savedUser.getId());
@@ -35,42 +37,37 @@ class UserDAOTest {
     @Test
     void getUserByIdTest() {
         User user = aNewUser();
-        UserDAO userDAO = new UserDAO();
+        User savedUser = userService.save(user);
 
-        User savedUser = userDAO.save(user);
         assertNotNull(savedUser.getId());
-
-        Assertions.assertEquals(savedUser, userDAO.getById(savedUser.getId()));
+        Assertions.assertEquals(savedUser, userService.getById(savedUser.getId()));
     }
 
     @Test
     void updateUserTest() {
         User userForSaving = aNewUser();
-        UserDAO userDAO = new UserDAO();
+        User savedUser = userService.save(userForSaving);
 
-        User savedUser = userDAO.save(userForSaving);
         assertNotNull(savedUser.getId());
 
         User userForUpdate = savedUser.toBuilder()
                 .id(savedUser.getId())
                 .firstName("Roman")
                 .build();
-        User updatedUser = userDAO.update(userForUpdate);
+        User updatedUser = userService.update(userForUpdate);
 
         Assertions.assertEquals(updatedUser, userForUpdate);
-
     }
 
     @Test
     void deleteUserTest() {
         User userForSaving = aNewUser();
-        UserDAO userDAO = new UserDAO();
+        User savedUser = userService.save(userForSaving);
 
-        User savedUser = userDAO.save(userForSaving);
         assertNotNull(savedUser.getId());
 
-        userDAO.delete(savedUser);
+        userService.delete(savedUser);
 
-        Assertions.assertNull(userDAO.getById(savedUser.getId()));
+        Assertions.assertNull(userService.getById(savedUser.getId()));
     }
 }

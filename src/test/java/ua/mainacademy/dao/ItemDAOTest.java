@@ -5,12 +5,15 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ua.mainacademy.model.Item;
+import ua.mainacademy.service.ItemService;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static ua.mainacademy.prototype.Prototype.aNewItem;
 import static ua.mainacademy.testsutil.ClearTestDB.clearDb;
 
 class ItemDAOTest {
+
+    private ItemService itemService = new ItemService(new ItemDAO());
 
     @BeforeEach
     void setUp() {
@@ -25,8 +28,7 @@ class ItemDAOTest {
     @Test
     void saveItemTest() {
         Item item = aNewItem();
-        ItemDAO itemDAO = new ItemDAO();
-        Item savedItem = itemDAO.save(item);
+        Item savedItem = itemService.save(item);
 
         assertNotNull(savedItem);
         assertNotNull(savedItem.getId());
@@ -35,26 +37,24 @@ class ItemDAOTest {
     @Test
     void getItemByIdTest() {
         Item item = aNewItem();
-        ItemDAO itemDAO = new ItemDAO();
-        Item savedItem = itemDAO.save(item);
+        Item savedItem = itemService.save(item);
 
         assertNotNull(savedItem.getId());
-        Assertions.assertEquals(itemDAO.getById(savedItem.getId()), savedItem);
+        Assertions.assertEquals(itemService.getById(savedItem.getId()), savedItem);
     }
 
     @Test
     void updateItemTest() {
         Item item = aNewItem();
-        ItemDAO itemDAO = new ItemDAO();
+        Item savedItem = itemService.save(item);
 
-        Item savedItem = itemDAO.save(item);
         assertNotNull(savedItem.getId());
 
         Item itemForUpdate = aNewItem().toBuilder()
                 .id(savedItem.getId())
                 .itemCode("NewCode")
                 .build();
-        Item updatedItem = itemDAO.update(itemForUpdate);
+        Item updatedItem = itemService.update(itemForUpdate);
 
         Assertions.assertEquals(itemForUpdate, updatedItem);
     }
@@ -62,13 +62,12 @@ class ItemDAOTest {
     @Test
     void deleteUserTest() {
         Item item = aNewItem();
-        ItemDAO itemDAO = new ItemDAO();
+        Item savedItem = itemService.save(item);
 
-        Item savedItem = itemDAO.save(item);
         assertNotNull(savedItem.getId());
 
-        itemDAO.delete(savedItem);
+        itemService.delete(savedItem);
 
-        Assertions.assertNull(itemDAO.getById(savedItem.getId()));
+        Assertions.assertNull(itemService.getById(savedItem.getId()));
     }
 }
